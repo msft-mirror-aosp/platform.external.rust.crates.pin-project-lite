@@ -1,7 +1,5 @@
 name: "pin-project-lite"
-description:
-    "A lightweight version of pin-project written with declarative macros.\n"
-
+description: "A lightweight version of pin-project written with declarative macros."
 third_party {
   url {
     type: HOMEPAGE
@@ -12,7 +10,10 @@ third_party {
     value: "https://static.crates.io/crates/pin-project-lite/pin-project-lite-0.1.7.crate"
   }
   version: "0.1.7"
-  last_upgrade_date { year: 2020 month: 9 day: 17 }
-  # Dual-licensed, using the least restrictive per go/thirdpartylicenses#same.
   license_type: NOTICE
+  last_upgrade_date {
+    year: 2020
+    month: 9
+    day: 17
+  }
 }
