@@ -6,9 +6,8 @@ on:
     branches:
       - master
       - staging
-      - trying
   schedule:
-    - cron: '00 01 * * *'
+    - cron: '0 1 * * *'
 
 env:
   RUSTFLAGS: -Dwarnings
@@ -34,57 +33,42 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust
-        run: |
-          . ./ci/install-rust.sh ${{ matrix.rust }}
-      - name: Install cargo-hack
-        if: matrix.rust == 'nightly'
-        run: |
-          cargo install cargo-hack
-      - name: Add targets
-        if: matrix.rust == 'nightly'
-        run: |
-          rustup target add thumbv7m-none-eabi
-      - name: cargo test
-        run: |
-          cargo test --all
-      - name: cargo check (no-std)
-        if: matrix.rust == 'nightly'
-        run: |
-          cargo check --target thumbv7m-none-eabi --manifest-path tests/no-std/Cargo.toml
-      - name: cargo check (minimal versions)
-        if: matrix.rust == 'nightly'
-        run: |
-          . ./ci/check-minimal-versions.sh
+        run: ci/install-rust.sh ${{ matrix.rust }}
+      - if: matrix.rust == 'nightly'
+        run: cargo install cargo-hack
+      - run: rustup target add thumbv7m-none-eabi
+      - run: cargo test --all --exclude expandtest
+      - run: cargo check --manifest-path tests/no-std/Cargo.toml --target thumbv7m-none-eabi
+      - if: matrix.rust == 'nightly'
+        run: bash scripts/check-minimal-versions.sh
+
+  expandtest:
+    name: expandtest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Rust and Rustfmt
+        run: ci/install-component.sh rustfmt
+      - run: cargo install cargo-expand
+      - run: bash scripts/expandtest.sh
 
   clippy:
     name: clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Rust
-        run: |
-          . ./ci/install-rust.sh
-      - name: Install clippy
-        run: |
-          . ./ci/install-component.sh clippy
-      - name: cargo clippy
-        run: |
-          cargo clippy --all --all-features --all-targets
+      - name: Install Rust and Clippy
+        run: ci/install-component.sh clippy
+      - run: cargo clippy --all --all-features --all-targets
 
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Rust
-        run: |
-          . ./ci/install-rust.sh
-      - name: Install rustfmt
-        run: |
-          . ./ci/install-component.sh rustfmt
-      - name: cargo fmt --check
-        run: |
-          cargo fmt --all -- --check
+      - name: Install Rust and Rustfmt
+        run: ci/install-component.sh rustfmt
+      - run: cargo fmt --all -- --check
 
   rustdoc:
     name: rustdoc
@@ -94,11 +78,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust
-        run: |
-          . ./ci/install-rust.sh
-      - name: cargo doc
-        run: |
-          cargo doc --no-deps --all --all-features
+        run: ci/install-rust.sh
+      - run: cargo doc --no-deps --all --all-features
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: shellcheck **/*.sh
 
   # These jobs don't actually test anything, but they're used to tell bors the
   # build completed, as there is no practical way to detect when a workflow is
@@ -111,9 +99,11 @@ jobs:
     if: github.event_name == 'push' && success()
     needs:
       - test
+      - expandtest
       - clippy
       - rustfmt
       - rustdoc
+      - shellcheck
     runs-on: ubuntu-latest
     steps:
       - name: Mark the job as a success
@@ -123,9 +113,11 @@ jobs:
     if: github.event_name == 'push' && !success()
     needs:
       - test
+      - expandtest
       - clippy
       - rustfmt
       - rustdoc
+      - shellcheck
     runs-on: ubuntu-latest
     steps:
       - name: Mark the job as a failure
