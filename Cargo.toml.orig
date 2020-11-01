@@ -1,6 +1,6 @@
 [package]
 name = "pin-project-lite"
-version = "0.1.7"
+version = "0.1.11"
 authors = ["Taiki Endo <te316e89@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0 OR MIT"
@@ -20,6 +20,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 [workspace]
 members = [
     "tests/doc",
+    "tests/expand",
     "tests/no-core",
     "tests/no-std",
 ]
@@ -27,5 +28,6 @@ members = [
 [dependencies]
 
 [dev-dependencies]
-rustversion = "1.0"
-trybuild = "1.0"
+rustversion = "1"
+static_assertions = "1"
+trybuild = "1"

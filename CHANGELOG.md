@@ -6,6 +6,27 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [0.1.11] - 2020-10-20
+
+* Suppress `clippy::redundant_pub_crate` lint in generated code.
+
+* Documentation improvements.
+
+## [0.1.10] - 2020-10-01
+
+* Suppress `drop_bounds` lint, which will be added to rustc in the future. See [taiki-e/pin-project#272](https://github.com/taiki-e/pin-project/issues/272) for more details.
+
+## [0.1.9] - 2020-09-29
+
+* Fix trailing comma support in generics
+
+## [0.1.8] - 2020-09-26
+
+* Fix compatibility of generated code with `forbid(future_incompatible)`
+
+  Note: This does not guarantee compatibility with `forbid(future_incompatible)` in the future.
+  If rustc adds a new lint, we may not be able to keep this.
+
 ## [0.1.7] - 2020-06-04
 
 * [Support `?Sized` bounds in where clauses.][22]
@@ -61,7 +82,11 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 Initial release
 
-[Unreleased]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.7...HEAD
+[Unreleased]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.11...HEAD
+[0.1.11]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.10...v0.1.11
+[0.1.10]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.9...v0.1.10
+[0.1.9]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.8...v0.1.9
+[0.1.8]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/taiki-e/pin-project-lite/compare/v0.1.4...v0.1.5
