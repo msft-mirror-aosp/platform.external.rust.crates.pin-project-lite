@@ -54,5 +54,6 @@ rust_library {
         "com.android.uwb",
         "com.android.virt",
     ],
+    vendor_available: true,
     min_sdk_version: "29",
 }
