@@ -108,9 +108,6 @@
 #![warn(future_incompatible, rust_2018_idioms, single_use_lifetimes, unreachable_pub)]
 #![warn(clippy::all, clippy::default_trait_access)]
 
-// ANDROID: Use std to allow building as a dylib.
-extern crate std;
-
 /// A macro that creates a projection type covering all the fields of struct.
 ///
 /// This macro creates a projection type according to the following rules:
