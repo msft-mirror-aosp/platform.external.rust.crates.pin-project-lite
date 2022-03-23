@@ -1,13 +1,15 @@
 [package]
 name = "pin-project-lite"
-version = "0.2.8"
+version = "0.2.4"
+authors = ["Taiki Endo <te316e89@gmail.com>"]
 edition = "2018"
-rust-version = "1.37"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/taiki-e/pin-project-lite"
+documentation = "https://docs.rs/pin-project-lite"
 keywords = ["pin", "macros"]
 categories = ["no-std", "rust-patterns"]
-exclude = ["/.*", "/tools"]
+readme = "README.md"
+exclude = ["/.github", "/scripts"]
 description = """
 A lightweight version of pin-project written with declarative macros.
 """
@@ -18,12 +20,12 @@ targets = ["x86_64-unknown-linux-gnu"]
 [workspace]
 members = [
     "tests/doc",
+    "tests/expand",
     "tests/no-core",
     "tests/no-std",
 ]
 
 [dev-dependencies]
-macrotest = "1.0.8"
 rustversion = "1"
 static_assertions = "1"
-trybuild = "1.0.49"
+trybuild = "1"
