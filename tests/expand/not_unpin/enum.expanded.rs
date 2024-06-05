@@ -1,4 +1,3 @@
-use std::pin::Pin;
 use pin_project_lite::pin_project;
 enum Enum<T, U> {
     Struct { pinned: T, unpinned: U },
@@ -84,29 +83,17 @@ const _: () = {
             }
         }
     }
-    #[allow(non_snake_case)]
-    struct __Origin<'__pin, T, U> {
-        __dummy_lifetime: ::pin_project_lite::__private::PhantomData<&'__pin ()>,
-        Struct: (T, ::pin_project_lite::__private::AlwaysUnpin<U>),
-        Unit: (),
-    }
+    #[doc(hidden)]
     impl<'__pin, T, U> ::pin_project_lite::__private::Unpin for Enum<T, U>
     where
-        __Origin<'__pin, T, U>: ::pin_project_lite::__private::Unpin,
+        (
+            ::core::marker::PhantomData<&'__pin ()>,
+            ::core::marker::PhantomPinned,
+        ): ::pin_project_lite::__private::Unpin,
     {}
-    impl<T, U> ::pin_project_lite::__private::Drop for Enum<T, U> {
-        fn drop(&mut self) {
-            fn __drop_inner<T, U>(
-                this: ::pin_project_lite::__private::Pin<&mut Enum<T, U>>,
-            ) {
-                fn __drop_inner() {}
-                let _ = this;
-            }
-            let pinned_self: ::pin_project_lite::__private::Pin<&mut Self> = unsafe {
-                ::pin_project_lite::__private::Pin::new_unchecked(self)
-            };
-            __drop_inner(pinned_self);
-        }
-    }
+    trait MustNotImplDrop {}
+    #[allow(clippy::drop_bounds, drop_bounds)]
+    impl<T: ::pin_project_lite::__private::Drop> MustNotImplDrop for T {}
+    impl<T, U> MustNotImplDrop for Enum<T, U> {}
 };
 fn main() {}
